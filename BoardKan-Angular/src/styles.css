@@ -1,0 +1,54 @@
+/* You can add global styles to this file, and also import other style files */
+
+html, body { height: 100%; }
+body { margin: 0; font-family: Roboto, "Helvetica Neue", sans-serif; }
+
+
+body.dark-theme {
+    background-color: #121212;
+    color: white;
+  }
+  
+  .dark-theme .navbar {
+    background-color: #121212 !important;
+    color: white;
+    border-bottom: 5px solid rgba(0, 123, 255, 0.2) !important;
+  }
+  
+  .dark-theme mat-toolbar {
+    background-color: #121212 !important;
+  }
+    
+  .dark-theme .add-task-button{
+    border: 2px solid rgba(0, 123, 255, 0.2) !important;
+    background-color: #121212 !important;
+    color: white;
+  }
+
+  .dark-theme .add-task-button mat-icon{
+    color: white;
+  }
+
+  .dark-theme .users-button-list {
+    border: 2px solid rgba(0, 123, 255, 0.2) !important; 
+    color: white !important;
+  }
+
+  .dark-theme .users-button-list.active {
+    background-color: rgba(0, 123, 255, 0.2) !important;
+    color: white !important;
+  }
+
+  .dark-theme .task-column{
+    color: black !important;
+  } 
+
+  .dark-theme .form-container{
+    background-color: #121212 !important;
+  }
+
+  .dark-theme .form-header, .form-links{
+    color: black !important;
+  }
+
+  

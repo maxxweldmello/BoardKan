@@ -1,0 +1,16 @@
+.heading-container{
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    height: 100px;
+}
+
+.heading h1{
+    font-size: 30px;
+}
+
+.add-task-button{
+    background: #f3f3f3;
+    border: 2px solid rgba(0, 128, 255, 0.4);
+    box-shadow: none;
+}

@@ -1,0 +1,7 @@
+<div class="user-buttons">
+    <button class="users-button-list" mat-button *ngFor="let user of users" (click)="selectUser(user.username)"
+        [class.active]="user.username === selectedUsername">
+      {{ user.username }}
+    </button>
+</div>
+<app-task *ngIf="selectedUsername" [username]="selectedUsername"></app-task>

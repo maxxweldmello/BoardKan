@@ -1,0 +1,31 @@
+.task-form {
+  display: grid;
+  grid-template-columns: 1fr;
+  grid-template-rows: auto; 
+  gap: 20px; 
+  height: 425px;
+  padding: 20px;
+}
+
+mat-form-field {
+  width: 100%;
+  max-width: 100%; 
+}
+
+.third-line {
+  display: grid;
+  grid-template-columns: 1fr 1fr 1fr;
+  gap: 20px;
+}
+
+.dialog-buttons {
+  display: flex;
+  justify-content: flex-end;
+  width: 100%;
+  padding: 10px;
+}
+
+button {
+  margin-left: 10px;
+}
+

@@ -1,0 +1,268 @@
+<form [formGroup]="filterForm">
+  <div class="filter-container">
+    <mat-form-field appearance="fill">
+      <mat-label>Priority</mat-label>
+      <mat-select formControlName="priority">
+        <mat-option value="">All</mat-option>
+        <mat-option value="High">High</mat-option>
+        <mat-option value="Medium">Medium</mat-option>
+        <mat-option value="Low">Low</mat-option>
+      </mat-select>
+    </mat-form-field>
+
+    <mat-form-field appearance="fill">
+      <mat-label>Assignees</mat-label>
+      <mat-select formControlName="assignees" multiple>
+        <mat-option *ngFor="let user of users" [value]="user.username">
+          {{ user.username }}
+        </mat-option>
+      </mat-select>
+    </mat-form-field>
+
+    <mat-form-field appearance="fill" formGroupName="dateRange">
+      <mat-label>Due Date Range</mat-label>
+      <mat-date-range-input [rangePicker]="picker">
+        <input matStartDate formControlName="start" placeholder="Start date">
+        <input matEndDate formControlName="end" placeholder="End date">
+      </mat-date-range-input>
+      <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
+      <mat-date-range-picker #picker></mat-date-range-picker>
+    </mat-form-field>
+  </div>
+</form>
+
+<div class="task-container">
+  <div class="task-column" cdkDropList id="backlogList" [cdkDropListData]="backlogTasks"
+    [cdkDropListConnectedTo]="['inProgressList', 'completedList']" (cdkDropListDropped)="drop($event)">
+    <h3>Backlog</h3>
+
+    <div class="sort-buttons">
+      <button mat-button (click)="sortByPriority('backlog')">
+        Priority
+      </button>
+
+      <button mat-button (click)="sortByDate('backlog')">
+        Due Date
+      </button>
+    </div>
+    
+    <div *ngFor="let task of backlogTasks" cdkDrag class="task-card"
+     [cdkDragDisabled]="loggedInUsername !== username" [ngClass]="getStatusClass(task.status)">
+
+      <div class="task-card-content">
+        <mat-form-field appearance="fill">
+          <input matInput [(ngModel)]="task.title" [disabled]="!task.isEditing" class="task-heading">
+        </mat-form-field>
+
+        <mat-form-field appearance="fill">
+          <textarea matInput [(ngModel)]="task.description" [disabled]="!task.isEditing"
+                    cdkTextareaAutosize #autosize="cdkTextareaAutosize"
+                    cdkAutosizeMinRows="auto" cdkAutosizeMaxRows="auto"
+          ></textarea>
+        </mat-form-field>
+
+        <div class="task-info">
+          <mat-form-field appearance="fill" class="inline-field">
+            <mat-select [(ngModel)]="task.priority" [disabled]="!task.isEditing">
+              <mat-option value="High">High</mat-option>
+              <mat-option value="Medium">Medium</mat-option>
+              <mat-option value="Low">Low</mat-option>
+            </mat-select>
+          </mat-form-field>
+
+          <mat-form-field appearance="fill" class="inline-field">
+            <input matInput [matDatepicker]="picker" [(ngModel)]="task.dueDate" [disabled]="!task.isEditing">
+            <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
+            <mat-datepicker #picker></mat-datepicker>
+          </mat-form-field>
+        </div>
+
+        <mat-form-field appearance="fill">
+          <mat-select [(ngModel)]="task.assigneeUsernames" multiple [disabled]="!task.isEditing">
+            <mat-option *ngFor="let user of users" [value]="user.username">
+              {{ user.username }}
+            </mat-option>
+          </mat-select>
+        </mat-form-field>
+      </div>
+      <div *cdkDragPlaceholder class="custom-placeholder">
+        Drop here
+      </div>
+      <div class="task-card-header">
+        <div class="task-card-buttons">
+          <button *ngIf="task.isEditing" class="save-button" (click)="saveTask(task)">
+            <mat-icon>upgrade</mat-icon>
+          </button>
+                
+          <button *ngIf="!task.isEditing && loggedInUsername === username" mat-icon-button [matMenuTriggerFor]="menu">
+            <mat-icon>more_vert</mat-icon>
+          </button>
+          <mat-menu #menu="matMenu" class="button-menu">
+            <button class="edit-button" mat-fab extended (click)="editTask(task)">
+              <mat-icon>edit</mat-icon>Edit
+            </button>
+            <button class="delete-button" mat-fab extended (click)="openDeleteDialog(task.id)">
+              <mat-icon>delete</mat-icon>Delete
+            </button>
+          </mat-menu>
+        </div>
+      </div>
+          </div>
+  </div>
+
+  <div class="task-column" cdkDropList id="inProgressList" [cdkDropListData]="inProgressTasks"
+    [cdkDropListConnectedTo]="['backlogList', 'completedList']" (cdkDropListDropped)="drop($event)">
+    <h3>In Progress</h3>
+
+    <div class="sort-buttons">
+      <button mat-button (click)="sortByPriority('inProgress')">
+        Priority
+      </button>
+
+      <button mat-button (click)="sortByDate('inProgress')">
+        Due Date
+      </button>
+    </div>
+    
+    <div *ngFor="let task of inProgressTasks" cdkDrag class="task-card"
+      [cdkDragDisabled]="loggedInUsername !== username"[ngClass]="getStatusClass(task.status)">
+      <div class="task-card-content">
+        <mat-form-field appearance="fill">
+          <input matInput [(ngModel)]="task.title" [disabled]="!task.isEditing" class="task-heading">
+        </mat-form-field>
+
+        <mat-form-field appearance="fill">
+          <textarea matInput [(ngModel)]="task.description" [disabled]="!task.isEditing"
+                    cdkTextareaAutosize #autosize="cdkTextareaAutosize"
+                    cdkAutosizeMinRows="auto" cdkAutosizeMaxRows="auto"
+          ></textarea>
+        </mat-form-field>
+
+        <div class="task-info">
+          <mat-form-field appearance="fill" class="inline-field">
+            <mat-select [(ngModel)]="task.priority" [disabled]="!task.isEditing">
+              <mat-option value="High">High</mat-option>
+              <mat-option value="Medium">Medium</mat-option>
+              <mat-option value="Low">Low</mat-option>
+            </mat-select>
+          </mat-form-field>
+
+          <mat-form-field appearance="fill" class="inline-field">
+            <input matInput [matDatepicker]="picker" [(ngModel)]="task.dueDate" [disabled]="!task.isEditing">
+            <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
+            <mat-datepicker #picker></mat-datepicker>
+          </mat-form-field>
+        </div>
+
+        <mat-form-field appearance="fill">
+          <mat-select [(ngModel)]="task.assigneeUsernames" multiple [disabled]="!task.isEditing">
+            <mat-option *ngFor="let user of users" [value]="user.username">
+              {{ user.username }}
+            </mat-option>
+          </mat-select>
+        </mat-form-field>
+
+      </div>
+      <div *cdkDragPlaceholder class="custom-placeholder">
+        Drop here
+      </div>
+      <div class="task-card-header">
+        <div class="task-card-buttons">
+          <button *ngIf="task.isEditing" class="save-button" (click)="saveTask(task)">
+            <mat-icon>upgrade</mat-icon>
+          </button>
+      
+          <button *ngIf="!task.isEditing && loggedInUsername === username" mat-icon-button [matMenuTriggerFor]="menu">
+            <mat-icon>more_vert</mat-icon>
+          </button>
+          <mat-menu #menu="matMenu" class="button-menu">
+            <button class="edit-button" mat-fab extended (click)="editTask(task)">
+              <mat-icon>edit</mat-icon>Edit
+            </button>
+            <button class="delete-button" mat-fab extended (click)="openDeleteDialog(task.id)">
+              <mat-icon>delete</mat-icon>Delete
+            </button>
+          </mat-menu>
+        </div>
+      </div>
+     </div>
+  </div>
+
+  <div class="task-column" cdkDropList id="completedList" [cdkDropListData]="completedTasks"
+    [cdkDropListConnectedTo]="['backlogList', 'inProgressList']" (cdkDropListDropped)="drop($event)">
+    <h3>Completed</h3>
+
+    <div class="sort-buttons">
+      <button mat-button (click)="sortByPriority('completed')">
+        Priority
+      </button>
+
+      <button mat-button (click)="sortByDate('completed')">
+        Due Date
+      </button>
+    </div>
+    
+    <div *ngFor="let task of completedTasks" cdkDrag class="task-card"
+      [cdkDragDisabled]="loggedInUsername !== username" [ngClass]="getStatusClass(task.status)">
+      <div class="task-card-content">
+        <mat-form-field appearance="fill">
+          <input matInput [(ngModel)]="task.title" [disabled]="!task.isEditing" class="task-heading">
+        </mat-form-field>
+
+        <mat-form-field appearance="fill">
+          <textarea matInput [(ngModel)]="task.description" [disabled]="!task.isEditing"
+                    cdkTextareaAutosize #autosize="cdkTextareaAutosize"
+                    cdkAutosizeMinRows="auto" cdkAutosizeMaxRows="auto"
+          ></textarea>
+        </mat-form-field>
+
+        <div class="task-info">
+          <mat-form-field appearance="fill" class="inline-field">
+            <mat-select [(ngModel)]="task.priority" [disabled]="!task.isEditing">
+              <mat-option value="High">High</mat-option>
+              <mat-option value="Medium">Medium</mat-option>
+              <mat-option value="Low">Low</mat-option>
+            </mat-select>
+          </mat-form-field>
+
+          <mat-form-field appearance="fill" class="inline-field">
+            <input matInput [matDatepicker]="picker" [(ngModel)]="task.dueDate" [disabled]="!task.isEditing">
+            <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
+            <mat-datepicker #picker></mat-datepicker>
+          </mat-form-field>
+        </div>
+
+        <mat-form-field appearance="fill">
+          <mat-select [(ngModel)]="task.assigneeUsernames" multiple [disabled]="!task.isEditing">
+            <mat-option *ngFor="let user of users" [value]="user.username">
+              {{ user.username }}
+            </mat-option>
+          </mat-select>
+        </mat-form-field>
+
+      </div>
+      <div *cdkDragPlaceholder class="custom-placeholder">
+        Drop here
+      </div>
+      <div class="task-card-header">
+        <div class="task-card-buttons">
+          <button *ngIf="task.isEditing" class="save-button" (click)="saveTask(task)">
+            <mat-icon>upgrade</mat-icon>
+          </button>
+      
+          <button *ngIf="!task.isEditing && loggedInUsername === username" mat-icon-button [matMenuTriggerFor]="menu">
+            <mat-icon>more_vert</mat-icon>
+          </button>
+          <mat-menu #menu="matMenu" class="button-menu">
+            <button class="edit-button" mat-fab extended (click)="editTask(task)">
+              <mat-icon>edit</mat-icon>Edit
+            </button>
+            <button class="delete-button" mat-fab extended (click)="openDeleteDialog(task.id)">
+              <mat-icon>delete</mat-icon>Delete
+            </button>
+          </mat-menu>
+        </div>
+      </div>
+          </div>
+  </div>
+</div>

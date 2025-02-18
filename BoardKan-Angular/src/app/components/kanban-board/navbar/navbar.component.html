@@ -1,0 +1,20 @@
+<mat-toolbar class="navbar" [class.dark-theme]="isDarkMode">
+  <div class="logo">
+    <mat-icon>developer_board</mat-icon>
+    <span>BoardKan</span>
+  </div>
+
+  <span class="spacer"></span>
+
+  <div class="theme">
+    <button mat-icon-button (click)="toggleDarkMode()">
+      <mat-icon>{{ isDarkMode ? 'dark_mode' : 'light_mode' }}</mat-icon>
+    </button>  
+  </div>
+
+  <div class="logout">
+    <button mat-icon-button (click)="logout()">
+      <mat-icon>exit_to_app</mat-icon>
+    </button>  
+  </div>
+</mat-toolbar>

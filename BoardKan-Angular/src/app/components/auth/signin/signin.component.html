@@ -1,0 +1,35 @@
+<div class="form-container">
+  <mat-card>
+    <h1 class="form-header">Sign In</h1>
+    <form [formGroup]="signinForm" (ngSubmit)="onSubmit()">
+      
+      <mat-form-field appearance="fill" class="form-field">
+        <mat-label>Username</mat-label>
+        <input matInput formControlName="username" />
+        <mat-error *ngIf="signinForm.get('username')?.hasError('required') && signinForm.get('username')?.touched">
+          <mat-icon>error</mat-icon>Username is required
+        </mat-error>
+        <mat-error *ngIf="signinForm.get('username')?.hasError('invalidUsername') && signinForm.get('username')?.touched">
+          <mat-icon>error</mat-icon>Username must contain only alphabets.
+        </mat-error>      
+      </mat-form-field>
+
+      <mat-form-field appearance="fill" class="form-field">
+        <mat-label>Password</mat-label>
+        <input matInput type="password" formControlName="password" />
+        <mat-error *ngIf="signinForm.get('password')?.hasError('required') && signinForm.get('password')?.touched">
+          <mat-icon>error</mat-icon>Password is required
+        </mat-error>
+      </mat-form-field>
+
+      <div class="form-actions">
+        <button mat-raised-button color="primary" type="submit" [disabled]="!signinForm.valid">
+          Sign In
+        </button>
+      </div>
+    </form>
+    <div class="form-links">
+      <p><strong>Don't have an account? <a routerLink="/signup">Sign up</a></strong></p>
+    </div>
+  </mat-card>
+</div>

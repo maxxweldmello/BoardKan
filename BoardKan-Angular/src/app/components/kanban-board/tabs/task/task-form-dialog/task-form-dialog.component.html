@@ -1,0 +1,83 @@
+<h2 mat-dialog-title>Add Task</h2>
+
+<form [formGroup]="taskForm" (ngSubmit)="onSubmit()" class="task-form">
+  <mat-form-field appearance="fill">
+    <mat-label>Title</mat-label>
+    <input matInput formControlName="title">
+    <mat-error *ngIf="taskForm.controls['title'].hasError('required')">
+      <mat-icon>error</mat-icon>Title is required.
+    </mat-error>
+    <mat-error *ngIf="taskForm.controls['title'].hasError('pattern')">
+      <mat-icon>error</mat-icon>Only alphabetic characters are allowed.
+    </mat-error>
+  </mat-form-field>
+
+  <mat-form-field appearance="fill">
+    <mat-label>Description</mat-label>
+    <input matInput formControlName="description">
+    <mat-error *ngIf="taskForm.controls['description'].hasError('required')">
+      <mat-icon>error</mat-icon>Description is required.
+    </mat-error>
+    <mat-error *ngIf="taskForm.controls['description'].hasError('pattern')">
+      <mat-icon>error</mat-icon>Only alphabetic characters are allowed.
+    </mat-error>
+  </mat-form-field>
+
+  <div class="third-line">
+    <mat-form-field appearance="fill">
+      <mat-label>Priority</mat-label>
+      <mat-select formControlName="priority" required>
+        <mat-option value="High">High</mat-option>
+        <mat-option value="Medium">Medium</mat-option>
+        <mat-option value="Low">Low</mat-option>
+      </mat-select>
+      <mat-error *ngIf="taskForm.controls['priority'].hasError('required')">
+        <mat-icon>error</mat-icon>Priority is required.
+      </mat-error>
+    </mat-form-field>
+
+    <mat-form-field appearance="fill">
+      <mat-label>Status</mat-label>
+      <mat-select formControlName="status" required>
+        <mat-option value="Backlog">Backlog</mat-option>
+        <mat-option value="InProgress">In Progress</mat-option>
+        <mat-option value="Completed">Completed</mat-option>
+      </mat-select>
+      <mat-error *ngIf="taskForm.controls['status'].hasError('required')">
+        <mat-icon>error</mat-icon>Status is required.
+      </mat-error>
+    </mat-form-field>
+
+    <mat-form-field appearance="fill">
+      <mat-label>Due Date</mat-label>
+      <input matInput [matDatepicker]="picker" formControlName="dueDate">
+      <mat-datepicker-toggle matIconSuffix [for]="picker"></mat-datepicker-toggle>
+      <mat-datepicker #picker></mat-datepicker>
+      <mat-error *ngIf="taskForm.controls['dueDate'].hasError('required')">
+        <mat-icon>error</mat-icon>Due date is required.
+      </mat-error>
+      <mat-error *ngIf="taskForm.controls['dueDate'].hasError('invalidDate')">
+        <mat-icon>error</mat-icon>Due date must be a future date.
+      </mat-error>
+    </mat-form-field>
+  </div>
+
+  <mat-form-field appearance="fill">
+    <mat-label>Assignee</mat-label>
+    <mat-select formControlName="assigneeUsernames" multiple>
+      <mat-option *ngFor="let user of users" [value]="user.username">
+        {{ user.username }}
+      </mat-option>
+    </mat-select>
+    <mat-error *ngIf="taskForm.controls['assigneeUsernames'].hasError('required')">
+      <mat-icon>error</mat-icon>Assignees is required.
+    </mat-error>
+  </mat-form-field>
+
+  <div mat-dialog-actions class="dialog-buttons">
+    <button mat-raised-button color="primary" type="submit" [disabled]="taskForm.invalid" class="save-button">
+      Save
+    </button>
+    <button mat-button (click)="onClose()">Cancel</button>
+  </div>
+</form>

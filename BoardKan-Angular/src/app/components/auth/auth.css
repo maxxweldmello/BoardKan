@@ -1,0 +1,63 @@
+.form-container {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+    padding: 16px;
+  }
+  
+  mat-card {
+    width: 100%;
+    max-width: 400px;
+    padding: 24px;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.2); 
+    border-radius: 8px; 
+    background-color: #fff;
+  }
+  
+  .form-header {
+    text-align: center;
+    margin-bottom: 16px;
+    font-size: 1.5rem;
+    font-weight: bold;
+  }
+  
+  .form-field {
+    width: 100%; 
+    margin-bottom: 22px;
+  }
+  
+  .form-actions {
+    text-align: right;
+  }
+  
+  mat-form-field {
+    display: block; 
+  }
+  
+  button {
+    width: 100%;
+    padding: 8px 16px;
+  }
+  
+  .form-links {
+    text-align: center;
+    margin-top: 16px;
+  }
+  
+  .form-links a {
+    text-decoration: none;
+    color: #2842d6;
+    font-size: 0.875rem;
+  }
+  
+  @media (max-width: 600px) {
+    mat-card {
+      padding: 16px; 
+    }
+  
+    .form-header {
+      font-size: 1.25rem;
+    }
+  }
+  

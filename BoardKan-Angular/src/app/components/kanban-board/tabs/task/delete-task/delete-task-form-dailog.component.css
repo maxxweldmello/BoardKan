@@ -1,0 +1,10 @@
+.delete-task-dailog{
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.delete-button{
+    color: white;
+    background: #fc4141;
+}
